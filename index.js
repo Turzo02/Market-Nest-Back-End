@@ -3,8 +3,10 @@ const app = express()
 const port = process.env.PORT || 3000
 const cors = require('cors')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require("dotenv").config()
 
-const uri = "mongodb+srv://MarketNest:bZIGKTzlNvwB2Wcm@smartproduct.gqn7fwo.mongodb.net/?appName=SmartProducT";
+
+const uri = `mongodb+srv://${process.env.MN_USER}:${process.env.MN_PASS}@smartproduct.gqn7fwo.mongodb.net/?appName=SmartProducT`;
 
 app.use(cors())
 app.use(express.json())
@@ -27,7 +29,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
    const productCollection = client.db('MarketNest').collection('products')
 
 
@@ -48,7 +50,7 @@ async function run() {
    //Get Product by Email
    app.get('/products/email/:email', async(req, res) => {
     const email = req.params.email
-    const query = { email: email }
+    const query = { submitted_by_email: email }
     const result = await productCollection.find(query).toArray()
     res.send(result)
    })
